@@ -4,10 +4,10 @@ require 'rake/gempackagetask'
 PLUGIN = "merb_geokit"
 NAME = "merb_geokit"
 VERSION = "0.0.2"
-AUTHOR = "Your Name"
-EMAIL = "Your Email"
-HOMEPAGE = "http://merb-plugins.rubyforge.org/merb_geokit/"
-SUMMARY = "Merb plugin that provides ..."
+AUTHOR = "Dusty Doris"
+EMAIL = "merb@dusty.name"
+HOMEPAGE = "http://code.google.com/p/merb-geokit/"
+SUMMARY = "Merb plugin that provides the geokit rails plugin"
 
 spec = Gem::Specification.new do |s|
   s.name = NAME
@@ -20,7 +20,8 @@ spec = Gem::Specification.new do |s|
   s.author = AUTHOR
   s.email = EMAIL
   s.homepage = HOMEPAGE
-  s.add_dependency('merb', '>= 0.4.0')
+  s.add_dependency('merb', '>= 0.5.0')
+  s.add_dependency('activerecord')
   s.require_path = 'lib'
   s.autorequire = PLUGIN
   s.files = %w(LICENSE README Rakefile TODO) + Dir.glob("{lib,specs}/**/*")
