@@ -123,13 +123,3 @@ For example:
 
 rake geo:ip ADDR="72.14.207.99"
 rake geo:google ADDR="1600 Pennsylvania Avenue NW, Washington, DC"
-
-
-TODO
-====
-
-Need to write some specs.
-Would like to make it work with the Sequel ORM.
-Anything else?
-
-

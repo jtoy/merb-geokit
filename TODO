@@ -1,5 +1,5 @@
-TODO:
-Fix LICENSE with your name
-Fix Rakefile with your name and contact info
-Add your code to lib/merb_geokit.rb
-Add your Merb rake tasks to lib/merb_geokit/merbtasks.rb
+TODO
+
+Need to write some specs.
+Would like to make it work with the Sequel ORM.
+Anything else?
