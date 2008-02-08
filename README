@@ -41,7 +41,9 @@ GeoKit::Geocoders::IpGeocoder.geocode(someaddress)
 
 eg:
 
-?> puts GeoKit::Geocoders::GoogleGeocoder.geocode("1600 Pennsylvania Avenue NW, Washington, DC").to_yaml
+>> address = "1600 Pennsylvania Avenue NW, Washington, DC"
+=> "1600 Pennsylvania Avenue NW, Washington, DC"
+>> puts GeoKit::Geocoders::GoogleGeocoder.geocode(address).to_yaml
 --- !ruby/object:GeoKit::GeoLoc 
 city: Washington
 country_code: US
