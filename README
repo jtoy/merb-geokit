@@ -1,0 +1,48 @@
+merb_geokit
+=================
+
+A plugin for the Merb framework that provides the geokit rails plugin.
+
+Install with
+# gem install merb_geokit
+
+Include it in Merb in your dependencies.rb file
+dependency "merb_geokit"
+
+When you first startup merb it will copy a default geokit.rb file
+to your config directory.  You should edit that file and add your API
+keys to it.
+
+If you want to store the geocode location of the user in a session
+or cookie, based on IP address, then add the following to the top of
+the Application controller
+
+before :store_ip_location
+
+Everything else works just like it does in rails.  
+
+
+** NOTE:
+Right now this plugin only works with ActiveRecord and only with mysql.
+
+This plugin also adds rake tasks.  You must supply the variable in as
+an ADDR environmental variable.  
+
+$ rake -T geo
+
+rake geo:ip      # Lookup up the address of an IP
+rake geo:google  # Look up an address on google
+rake geo:yahoo   # Look up an address on yahoo
+rake geo:us      # Look up an address on us_geocoder
+rake geo:ca      # Look up an address on ca_geocoder
+rake geo:multi   # Look up an address using the failover
+
+For example:
+
+rake geo:ip ADDR="72.14.207.99"
+rake geo:google ADDR="1600 Pennsylvania Avenue NW, Washington, DC"
+rake geo:yahoo ADDR="1600 Pennsylvania Avenue NW, Washington, DC"
+rake geo:us ADDR="1600 Pennsylvania Avenue NW, Washington, DC"
+rake geo:ca ADDR="1600 Pennsylvania Avenue NW, Washington, DC"
+rake geo:multi ADDR="1600 Pennsylvania Avenue NW, Washington, DC"
+
