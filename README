@@ -1,17 +1,63 @@
+
+
 merb_geokit
-=================
+===========
 
 A plugin for the Merb framework that provides the geokit rails plugin.
+This is mostly just a port of the rails plugin to merb format.  You should
+see the documentation on the geokit project for more instructions.
+
+site: http://geokit.rubyforge.org/
+rdoc: http://geokit.rubyforge.org/api/index.html
+
+
+using with merb
+===============
 
 Install with
-# gem install merb_geokit
+# svn co http://merb-geokit.googlecode.com/svn/trunk/ merb_geokit
+# cd merb_geokit
+# rake package
+# gem install pkg/merb_geokit
 
-Include it in Merb in your dependencies.rb file
+Include it in Merb in your dependencies.rb file in the config dir
 dependency "merb_geokit"
 
 When you first startup merb it will copy a default geokit.rb file
 to your config directory.  You should edit that file and add your API
 keys to it.
+
+
+geocoding
+=========
+This plugin comes with several geocoding interfaces.  You will need to sign
+up for an API key for at least Google and Yahoo.
+
+GeoKit::Geocoders::GoogleGeocoder.geocode(someaddress)
+GeoKit::Geocoders::YahooGeocoder.geocode(someaddress)
+GeoKit::Geocoders::UsGeocoder.geocode(someaddress)
+GeoKit::Geocoders::CaGeocoder.geocode(someaddress)
+GeoKit::Geocoders::IpGeocoder.geocode(someaddress)
+
+eg:
+
+?> puts GeoKit::Geocoders::GoogleGeocoder.geocode("1600 Pennsylvania Avenue NW, Washington, DC").to_yaml
+--- !ruby/object:GeoKit::GeoLoc 
+city: Washington
+country_code: US
+full_address: 1600 Pennsylvania Ave NW, Washington, DC 20006, USA
+lat: 38.898774
+lng: -77.036655
+precision: address
+provider: google
+state: DC
+street_address: 1600 Pennsylvania Ave Nw
+success: true
+zip: "20006"
+=> nil
+
+session/cookie location store
+=============================
 
 If you want to store the geocode location of the user in a session
 or cookie, based on IP address, then add the following to the top of
@@ -19,14 +65,50 @@ the Application controller
 
 before :store_ip_location
 
-Everything else works just like it does in rails.  
+then you will have:
+
+session[:geo_location]
+cookies[:geo_location]
+
+acts_as_mappable
+================
+
+Acts as mappable works with ActiveRecord objects and will allow you to
+do work with locations.  This would take an address, city, and state
+and automatically look it up and populate the database with the results
+from the search, including the lat, lng, and zip.
+
+class Location < ActiveRecord::Base
+  acts_as_mappable
+  validate :validate_address, :ensure_unique_address
+
+  private
+  def validate_address
+    address = "#{self.address}, #{self.city}, #{self.state}"
+    geo=GeoKit::Geocoders::YahooGeocoder.geocode(address)
+    unless geo.success && geo.street_address
+      errors.add(:address, "Could not find address") 
+    end
+    if geo.success
+      self.lat, self.lng, self.zip = geo.lat,geo.lng,geo.zip
+      self.address, self.city, self.state = geo.street_address, geo.city, geo.state
+    end
+  end
+
+  def ensure_unique_address
+    unless Location.find_all_by_address_and_zip(self.address,self.zip).empty?
+      errors.add(:address, "has already been taken")
+    end
+  end
+
+end
 
 
-** NOTE:
-Right now this plugin only works with ActiveRecord and only with mysql.
+rake tasks
+==========
 
-This plugin also adds rake tasks.  You must supply the variable in as
-an ADDR environmental variable.  
+This plugin also adds rake tasks.  You must supply the address as an
+environmental variable.  
 
 $ rake -T geo
 
@@ -41,8 +123,13 @@ For example:
 
 rake geo:ip ADDR="72.14.207.99"
 rake geo:google ADDR="1600 Pennsylvania Avenue NW, Washington, DC"
-rake geo:yahoo ADDR="1600 Pennsylvania Avenue NW, Washington, DC"
-rake geo:us ADDR="1600 Pennsylvania Avenue NW, Washington, DC"
-rake geo:ca ADDR="1600 Pennsylvania Avenue NW, Washington, DC"
-rake geo:multi ADDR="1600 Pennsylvania Avenue NW, Washington, DC"
+
+
+TODO
+====
+
+Need to write some specs.
+Would like to make it work with the Sequel ORM.
+Anything else?
+
 
