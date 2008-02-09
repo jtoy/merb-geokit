@@ -16,7 +16,7 @@ Install with
 # svn co http://merb-geokit.googlecode.com/svn/trunk/ merb_geokit
 # cd merb_geokit
 # rake package
-# gem install pkg/merb_geokit
+# gem install pkg/merb_geokit-x.x.x.gem
 
 Include it in Merb in your dependencies.rb file in the config dir
 dependency "merb_geokit"
