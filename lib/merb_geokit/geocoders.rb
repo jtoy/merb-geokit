@@ -83,7 +83,7 @@ module GeoKit
       def self.inherited(clazz)
         class_name = clazz.name.split('::').last
         src = <<-END_SRC
-          def self.#{class_name.underscore}(address)
+          def self.#{class_name.snake_case}(address)
             #{class_name}.geocode(address)
           end
         END_SRC
